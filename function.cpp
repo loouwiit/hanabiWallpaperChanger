@@ -19,11 +19,29 @@ void HanabiWallpaperChanger::setPath(const char* path)
 	using Commands::write;
 	using Commands::videoPathKey;
 
+	std::string videoPathString{ path };
+	if (videoPathString[0] != '\'')
+	{
+		if (videoPathString[0] == '"')
+		{
+			// replace
+			videoPathString[0] = '\'';
+			videoPathString.pop_back();
+			videoPathString.push_back('\'');
+		}
+		else
+		{
+			// add
+			videoPathString.insert(0, 1, '\'');
+			videoPathString.push_back('\'');
+		}
+	}
+
 	std::string commandString;
 	commandString = std::string(dconf) + ' ' +
 		std::string(write) + ' ' +
 		std::string(videoPathKey) + ' ' +
-		"\"'" + std::string(path) + "'\"";
+		'\"' + videoPathString + '\"';
 	// dconf write videoPathKey videoPath
 
 	// std::cout << commandString << '\n';
